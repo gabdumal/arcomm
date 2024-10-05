@@ -4,7 +4,14 @@ export const enum Behaviour {
   Relay = "relay",
 }
 
-export enum Actions {
+export enum Action {
+  Submit = "submit",
   Clear = "clear",
   Exit = "exit",
+}
+
+export interface Item {
+  label: string;
+  value: Action;
+  handler: Function;
 }

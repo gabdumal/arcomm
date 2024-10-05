@@ -3,14 +3,15 @@ import SelectInput from "ink-select-input";
 import { Libp2p } from "libp2p";
 import { useState } from "react";
 import Common from "./behaviours/Common.tsx";
+import Listener from "./behaviours/Listener.tsx";
 import Relay from "./behaviours/Relay.tsx";
-import { Actions, Behaviour } from "./types.ts";
+import { Action, Behaviour } from "./types.ts";
 
 export type LogMessage = (...messages: string[]) => void;
 
 const items = [
-  { label: "Clear log", value: Actions.Clear },
-  { label: "Exit", value: Actions.Exit },
+  { label: "Clear log", value: Action.Clear },
+  { label: "Exit", value: Action.Exit },
 ];
 
 interface AppProps {
@@ -19,18 +20,18 @@ interface AppProps {
 export default function App({ behaviour }: AppProps) {
   const { exit } = useApp();
 
-  const handleSelect = (item: { value: Actions }) => {
-    if (item.value === Actions.Exit) {
+  const [log, setLog] = useState<string>("");
+  const [node, setNode] = useState<Libp2p | null>(null);
+
+  const handleSelect = (item: { value: Action }) => {
+    if (item.value === Action.Exit) {
       exit();
       process.exit(0);
     }
-    if (item.value === Actions.Clear) {
+    if (item.value === Action.Clear) {
       setLog("");
     }
   };
-
-  const [log, setLog] = useState<string>("");
-  const [node, setNode] = useState<Libp2p | null>(null);
 
   const multiaddrsList =
     node?.getMultiaddrs().map((addr) => addr.toString()) ?? [];
@@ -70,12 +71,16 @@ export default function App({ behaviour }: AppProps) {
           }
         </Box>
       </Box>
-      <Text>{log}</Text>
+      <Box marginTop={1}>
+        <Text>{log}</Text>
+      </Box>
       <Box>
         {behaviour === Behaviour.Common ? (
           <Common node={node} setNode={setNode} setLog={setLog} />
         ) : behaviour === Behaviour.Relay ? (
           <Relay node={node} setNode={setNode} setLog={setLog} />
+        ) : behaviour === Behaviour.Listener ? (
+          <Listener node={node} setNode={setNode} setLog={setLog} />
         ) : (
           <Text>Unknown behaviour</Text>
         )}

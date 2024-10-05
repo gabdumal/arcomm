@@ -4,7 +4,6 @@ import { bootstrap } from "@libp2p/bootstrap";
 import { identify } from "@libp2p/identify";
 import { kadDHT, removePublicAddressesMapper } from "@libp2p/kad-dht";
 import { webSockets } from "@libp2p/websockets";
-import "dotenv/config";
 import { Box, Text } from "ink";
 import { createLibp2p, Libp2p } from "libp2p";
 import { useEffect } from "react";

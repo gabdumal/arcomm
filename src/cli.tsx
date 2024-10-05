@@ -30,4 +30,6 @@ const cli = meow(
   },
 );
 
-render(<App behaviour={cli.flags.behaviour as Behaviour} />, {});
+render(<App behaviour={cli.flags.behaviour as Behaviour} />, {
+  exitOnCtrlC: false,
+});

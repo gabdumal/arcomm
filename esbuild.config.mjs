@@ -3,7 +3,7 @@ import esbuild from "esbuild";
 
 esbuild
   .build({
-    write: false,
+    write: true,
     bundle: true,
     entryPoints: ["src/cli.tsx"],
     outdir: "dist",
