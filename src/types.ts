@@ -1,5 +1,6 @@
 export const enum Behaviour {
-  Common = "common",
+  Kademlia = "kademlia",
+  MDNS = "mdns",
   Relay = "relay",
   Listener = "listener",
   Dialer = "dialer",

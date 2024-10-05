@@ -2,9 +2,10 @@ import { Box, Text, useApp } from "ink";
 import SelectInput from "ink-select-input";
 import { Libp2p } from "libp2p";
 import { useState } from "react";
-import Common from "./behaviours/Common.tsx";
 import Dialer from "./behaviours/Dialer.tsx";
+import Kademlia from "./behaviours/Kademlia.tsx";
 import Listener from "./behaviours/Listener.tsx";
+import MDNS from "./behaviours/MDNS.tsx";
 import Relay from "./behaviours/Relay.tsx";
 import { Action, Behaviour } from "./types.ts";
 
@@ -50,20 +51,10 @@ export default function App({ behaviour }: AppProps) {
           </Text>
         </Box>
         <Box>
-          <Text bold>Multiaddress: </Text>
-          {
-            <Box flexDirection="column">
-              {multiaddrsList.length === 0 ? (
-                <Text color="magenta">none</Text>
-              ) : (
-                multiaddrsList?.map((addr, index) => (
-                  <Text key={index} color="magenta" wrap="wrap">
-                    {addr}
-                  </Text>
-                ))
-              )}
-            </Box>
-          }
+          <Text bold>Public key: </Text>
+          <Text bold color="blue">
+            {node?.peerId?.publicKey?.toString() ?? "undefined"}
+          </Text>
         </Box>
         <Box>
           <Text bold>Listening on: </Text>
@@ -86,8 +77,10 @@ export default function App({ behaviour }: AppProps) {
         <Text>{log}</Text>
       </Box>
       <Box>
-        {behaviour === Behaviour.Common ? (
-          <Common node={node} setNode={setNode} setLog={setLog} />
+        {behaviour === Behaviour.Kademlia ? (
+          <Kademlia node={node} setNode={setNode} setLog={setLog} />
+        ) : behaviour === Behaviour.MDNS ? (
+          <MDNS node={node} setNode={setNode} setLog={setLog} />
         ) : behaviour === Behaviour.Relay ? (
           <Relay node={node} setNode={setNode} setLog={setLog} />
         ) : behaviour === Behaviour.Listener ? (

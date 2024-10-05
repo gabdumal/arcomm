@@ -10,10 +10,10 @@ const cli = meow(
     $ my-cli <input>
 
   Options
-    --behaviour, -b  Set the behaviour (choices: ${Behaviour.Common}, ${Behaviour.Relay}, ${Behaviour.Listener}, ${Behaviour.Dialer}) [default: ${Behaviour.Common}]
+    --behaviour, -b  Set the behaviour (choices: ${Behaviour.Kademlia}, ${Behaviour.MDNS} ${Behaviour.Relay}, ${Behaviour.Listener}, ${Behaviour.Dialer}) [default: ${Behaviour.Kademlia}]
 
   Examples
-    $ my-cli --behaviour=${Behaviour.Common}
+    $ my-cli --behaviour=${Behaviour.Kademlia}
 `,
   {
     importMeta: import.meta,
@@ -21,7 +21,8 @@ const cli = meow(
       behaviour: {
         type: "string",
         choices: [
-          Behaviour.Common,
+          Behaviour.Kademlia,
+          Behaviour.MDNS,
           Behaviour.Relay,
           Behaviour.Listener,
           Behaviour.Dialer,
@@ -29,7 +30,7 @@ const cli = meow(
         isRequired: true,
         isMultiple: false,
         shortFlag: "b",
-        default: Behaviour.Common,
+        default: Behaviour.Kademlia,
       },
     },
   },

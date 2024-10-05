@@ -48,13 +48,13 @@ function start(node: Libp2p, logMessage: LogMessage) {
   });
 }
 
-interface CommonProps {
+interface KademliaProps {
   node: Libp2p | null;
   setNode: React.Dispatch<React.SetStateAction<Libp2p | null>>;
   setLog: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function Common({ node, setNode, setLog }: CommonProps) {
+export default function Kademlia({ node, setNode, setLog }: KademliaProps) {
   const logMessage: LogMessage = (...messages: string[]) => {
     const combinedMessage = messages.join("\n");
     setLog((log) => `${log}\n${combinedMessage}`);
