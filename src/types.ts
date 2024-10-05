@@ -1,7 +1,8 @@
 export const enum Behaviour {
   Common = "common",
-  Listener = "listener",
   Relay = "relay",
+  Listener = "listener",
+  Dialer = "dialer",
 }
 
 export enum Action {

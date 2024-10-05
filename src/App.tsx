@@ -3,6 +3,7 @@ import SelectInput from "ink-select-input";
 import { Libp2p } from "libp2p";
 import { useState } from "react";
 import Common from "./behaviours/Common.tsx";
+import Dialer from "./behaviours/Dialer.tsx";
 import Listener from "./behaviours/Listener.tsx";
 import Relay from "./behaviours/Relay.tsx";
 import { Action, Behaviour } from "./types.ts";
@@ -81,6 +82,8 @@ export default function App({ behaviour }: AppProps) {
           <Relay node={node} setNode={setNode} setLog={setLog} />
         ) : behaviour === Behaviour.Listener ? (
           <Listener node={node} setNode={setNode} setLog={setLog} />
+        ) : behaviour === Behaviour.Dialer ? (
+          <Dialer node={node} setNode={setNode} setLog={setLog} />
         ) : (
           <Text>Unknown behaviour</Text>
         )}

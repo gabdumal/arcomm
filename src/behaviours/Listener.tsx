@@ -53,8 +53,8 @@ async function start(
       `Advertising with a relay address of ${relayMultiaddr.toString()}`,
     );
   });
-
-  return conn;
+  const hasConnected = conn === null || conn === undefined ? false : true;
+  return hasConnected;
 }
 
 interface ListenerProps {
@@ -95,8 +95,8 @@ export default function Listener({ node, setNode, setLog }: ListenerProps) {
     }
     try {
       const relayMultiaddr = multiaddr(relayMultiaddrAsString.trim());
-      const conn = await start(node, relayMultiaddr, logMessage);
-      if (conn) setIsConnected(true);
+      const hasConnected = await start(node, relayMultiaddr, logMessage);
+      if (hasConnected) setIsConnected(true);
     } catch (e) {
       logMessage(`Invalid multiaddress`);
       return;

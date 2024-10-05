@@ -10,7 +10,7 @@ const cli = meow(
     $ my-cli <input>
 
   Options
-    --behaviour, -b  Set the behaviour (choices: ${Behaviour.Common}, ${Behaviour.Listener}, ${Behaviour.Relay}) [default: ${Behaviour.Common}]
+    --behaviour, -b  Set the behaviour (choices: ${Behaviour.Common}, ${Behaviour.Relay}, ${Behaviour.Listener}, ${Behaviour.Dialer}) [default: ${Behaviour.Common}]
 
   Examples
     $ my-cli --behaviour=${Behaviour.Common}
@@ -20,7 +20,12 @@ const cli = meow(
     flags: {
       behaviour: {
         type: "string",
-        choices: [Behaviour.Common, Behaviour.Listener, Behaviour.Relay],
+        choices: [
+          Behaviour.Common,
+          Behaviour.Relay,
+          Behaviour.Listener,
+          Behaviour.Dialer,
+        ],
         isRequired: true,
         isMultiple: false,
         shortFlag: "b",
