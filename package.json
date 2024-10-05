@@ -32,6 +32,7 @@
     "@libp2p/bootstrap": "^11.0.6",
     "@libp2p/circuit-relay-v2": "^2.1.1",
     "@libp2p/identify": "^3.0.6",
+    "@libp2p/kad-dht": "^13.1.2",
     "@libp2p/websockets": "^9.0.6",
     "@multiformats/multiaddr": "^12.3.1",
     "libp2p": "^2.1.5"
