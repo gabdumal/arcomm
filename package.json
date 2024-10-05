@@ -1,31 +1,5 @@
 {
-  "name": "arcomm",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.ts",
-  "type": "module",
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "dev:relay": "tsx watch src/relay.ts",
-    "dev:listener": "tsx watch src/listener.ts",
-    "dev:dialer": "tsx watch src/dialer.ts",
-    "build": "esbuild src/index.ts --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
-    "build:relay": "esbuild src/relay.ts --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
-    "build:listener": "esbuild src/listener.ts --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
-    "build:dialer": "esbuild src/dialer.ts --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
-    "exec": "pnpm build && node dist/index.js",
-    "exec:relay": "pnpm build:relay && node dist/relay.js",
-    "exec:listener": "pnpm build:listener && node dist/listener.js",
-    "exec:dialer": "pnpm build:dialer && node dist/dialer.js",
-    "deploy": "pnpm build && pnpm build:relay && pnpm build:listener",
-    "lint": "pnpm exec eslint ./src/** --fix",
-    "format": "pnpm exec prettier . -w",
-    "typecheck": "pnpm exec tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
   "dependencies": {
     "@chainsafe/libp2p-noise": "^16.0.0",
     "@chainsafe/libp2p-yamux": "^7.0.1",
@@ -35,21 +9,47 @@
     "@libp2p/kad-dht": "^13.1.2",
     "@libp2p/websockets": "^9.0.6",
     "@multiformats/multiaddr": "^12.3.1",
-    "libp2p": "^2.1.5"
+    "ink": "^5.0.1",
+    "libp2p": "^2.1.5",
+    "meow": "^13.2.0",
+    "react": "^18.3.1"
   },
+  "description": "",
   "devDependencies": {
+    "@babel/preset-react": "^7.25.7",
     "@eslint/js": "^9.12.0",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.7.4",
+    "@types/react": "^18.3.11",
     "esbuild": "^0.24.0",
     "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.1",
     "globals": "^15.10.0",
     "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.8.0"
-  }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [],
+  "license": "ISC",
+  "main": "src/index.ts",
+  "name": "arcomm",
+  "scripts": {
+    "build": "esbuild src/cli.tsx --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
+    "dev": "tsx watch src/cli.tsx",
+    "exec": "pnpm build && node dist/cli.js",
+    "format": "pnpm exec prettier . -w",
+    "lint": "pnpm exec eslint ./src/** --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "pnpm exec tsc"
+  },
+  "type": "module",
+  "version": "1.0.0"
 }
