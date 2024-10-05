@@ -43,7 +43,7 @@
   "main": "src/cli.tsx",
   "name": "arcomm",
   "scripts": {
-    "build": "esbuild src/cli.tsx --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
+    "build": "node esbuild.config.mjs",
     "dev": "tsx watch src/cli.tsx",
     "exec": "pnpm build && node dist/cli.js",
     "format": "pnpm exec prettier . -w",

@@ -1,61 +1,39 @@
 import { noise } from "@chainsafe/libp2p-noise";
 import { yamux } from "@chainsafe/libp2p-yamux";
-import { bootstrap } from "@libp2p/bootstrap";
+import { circuitRelayServer } from "@libp2p/circuit-relay-v2";
 import { identify } from "@libp2p/identify";
-import { kadDHT, removePublicAddressesMapper } from "@libp2p/kad-dht";
 import { webSockets } from "@libp2p/websockets";
-import "dotenv/config";
 import { Box, Text } from "ink";
 import { createLibp2p, Libp2p } from "libp2p";
 import { useEffect } from "react";
 import { LogMessage } from "src/App.tsx";
-import bootstrappers from "./bootstrappers.ts";
 
 async function init() {
   const node = await createLibp2p({
-    start: false,
+    start: true,
     addresses: {
-      listen: [`/ip4/127.0.0.1/tcp/0/ws`],
+      listen: ["/ip4/0.0.0.0/tcp/8091/ws"],
+      // TODO check "What is next?" section
+      // announce: ['/dns4/auto-relay.libp2p.io/tcp/443/wss/p2p/QmWDn2LY8nannvSWJzruUYoLZ4vV83vfCBwd8DipvdgQc3']
     },
     transports: [webSockets()],
     connectionEncrypters: [noise()],
     streamMuxers: [yamux()],
-    peerDiscovery: [
-      bootstrap({
-        list: bootstrappers,
-      }),
-    ],
     services: {
-      kadDHT: kadDHT({
-        protocol: "/ipfs/lan/kad/1.0.0",
-        peerInfoMapper: removePublicAddressesMapper,
-        clientMode: false,
-      }),
       identify: identify(),
+      relay: circuitRelayServer(),
     },
   });
   return node;
 }
 
-function start(node: Libp2p, logMessage: LogMessage) {
-  node.start();
-
-  node.addEventListener("peer:discovery", (evt) => {
-    logMessage("Discovered: ", evt.detail.id.toString());
-  });
-
-  node.addEventListener("peer:connect", (evt) => {
-    logMessage("Connected to: ", evt.detail.toString());
-  });
-}
-
-interface CommonProps {
+interface RelayProps {
   node: Libp2p | null;
   setNode: React.Dispatch<React.SetStateAction<Libp2p | null>>;
   setLog: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function Common({ node, setNode, setLog }: CommonProps) {
+export default function Relay({ node, setNode, setLog }: RelayProps) {
   const logMessage: LogMessage = (...messages: string[]) => {
     const combinedMessage = messages.join("\n");
     setLog((log) => `${log}\n${combinedMessage}`);
@@ -65,7 +43,6 @@ export default function Common({ node, setNode, setLog }: CommonProps) {
     const initializeNode = async () => {
       const node = await init();
       setNode(node);
-      start(node, logMessage);
     };
     initializeNode();
   }, []);
