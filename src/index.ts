@@ -1,8 +1,8 @@
-import { createLibp2p } from "libp2p";
-import { webSockets } from "@libp2p/websockets";
 import { noise } from "@chainsafe/libp2p-noise";
 import { yamux } from "@chainsafe/libp2p-yamux";
 import { bootstrap } from "@libp2p/bootstrap";
+import { webSockets } from "@libp2p/websockets";
+import { createLibp2p } from "libp2p";
 
 // Known peers addresses
 const bootstrapMultiaddrs = [

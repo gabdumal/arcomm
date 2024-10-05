@@ -35,7 +35,17 @@ console.log(`Connected to the relay ${conn.remotePeer.toString()}`);
 // Wait for connection and relay to be bind for the example purpose
 node.addEventListener("self:peer:update", (evt) => {
   // Updated self multiaddrs?
+  const multiaddrs = node.getMultiaddrs();
+  if (!multiaddrs) {
+    console.log(`No multiaddrs available`);
+    return;
+  }
+  const relayMultiaddr = multiaddrs[0];
+  if (!relayMultiaddr) {
+    console.log(`No relay multiaddr available`);
+    return;
+  }
   console.log(
-    `Advertising with a relay address of ${node.getMultiaddrs()[0].toString()}`
+    `Advertising with a relay address of ${relayMultiaddr.toString()}`,
   );
 });
