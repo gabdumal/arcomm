@@ -1,5 +1,10 @@
 export const enum Behaviour {
-  Default = "default",
+  Common = "common",
   Listener = "listener",
   Relay = "relay",
+}
+
+export enum Actions {
+  Clear = "clear",
+  Exit = "exit",
 }

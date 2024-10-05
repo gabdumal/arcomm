@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 import { render } from "ink";
 import meow from "meow";
-import React from "react";
-import App from "./App";
-import { Behaviour } from "./types";
+import App from "./App.tsx";
+import { Behaviour } from "./types.ts";
 
 const cli = meow(
   `
@@ -11,24 +10,24 @@ const cli = meow(
     $ my-cli <input>
 
   Options
-    --behaviour, -b  Set the behaviour (choices: default, listener, relay) [default: default]
+    --behaviour, -b  Set the behaviour (choices: ${Behaviour.Common}, ${Behaviour.Listener}, ${Behaviour.Relay}) [default: ${Behaviour.Common}]
 
   Examples
-    $ my-cli --behaviour=listener
+    $ my-cli --behaviour=${Behaviour.Common}
 `,
   {
     importMeta: import.meta,
     flags: {
       behaviour: {
         type: "string",
-        choices: ["default", "listener", "relay"],
+        choices: [Behaviour.Common, Behaviour.Listener, Behaviour.Relay],
         isRequired: true,
         isMultiple: false,
         shortFlag: "b",
-        default: "default",
+        default: Behaviour.Common,
       },
     },
   },
 );
 
-render(<App behaviour={cli.flags.behaviour as Behaviour} />);
+render(<App behaviour={cli.flags.behaviour as Behaviour} />, {});
