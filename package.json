@@ -7,7 +7,14 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "dev:relay": "tsx watch src/relay.ts",
+    "dev:listener": "tsx watch src/listener.ts",
     "build": "esbuild src/index.ts --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
+    "build:relay": "esbuild src/relay.ts --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
+    "build:listener": "esbuild src/listener.ts --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
+    "deploy": "pnpm build && pnpm build:relay && pnpm build:listener",
+    "exec": "pnpm build && node dist/index.js",
+    "exec:relay": "pnpm build:relay && node dist/relay.js",
+    "exec:listener": "pnpm build:listener && node dist/listener.js",
     "lint": "pnpm exec eslint ./src/** --fix",
     "format": "pnpm exec prettier . -w",
     "typecheck": "pnpm exec tsc",
@@ -23,6 +30,7 @@
     "@libp2p/circuit-relay-v2": "^2.1.1",
     "@libp2p/identify": "^3.0.6",
     "@libp2p/websockets": "^9.0.6",
+    "@multiformats/multiaddr": "^12.3.1",
     "libp2p": "^2.1.5"
   },
   "devDependencies": {

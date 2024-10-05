@@ -1,13 +1,18 @@
 {
   "cSpell.words": [
+    "arcomm",
     "chainsafe",
     "Communicatio",
     "dnsaddr",
     "Encrypters",
     "libp2p",
+    "multiaddr",
     "multiaddrs",
     "Multiaddrs",
+    "multiformats",
     "Muxers",
+    "outdir",
+    "typecheck",
     "websocket",
     "websockets",
     "yamux"

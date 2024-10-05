@@ -26,6 +26,9 @@ importers:
       '@libp2p/websockets':
         specifier: ^9.0.6
         version: 9.0.6
+      '@multiformats/multiaddr':
+        specifier: ^12.3.1
+        version: 12.3.1
       libp2p:
         specifier: ^2.1.5
         version: 2.1.5
