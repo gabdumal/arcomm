@@ -17,9 +17,15 @@ async function init() {
   return node;
 }
 
-async function start(node: Libp2p, autoRelayMultiaddr: Multiaddr) {
+async function start(
+  node: Libp2p,
+  autoRelayMultiaddr: Multiaddr,
+  logMessage: LogMessage,
+) {
   const conn = await node.dial(autoRelayMultiaddr);
   const hasConnected = conn === null || conn === undefined ? false : true;
+  if (hasConnected)
+    logMessage(`Connected to the relay ${conn.remotePeer.toString()}`);
   return hasConnected;
 }
 
@@ -60,10 +66,9 @@ export default function Dialer({ node, setNode, setLog }: DialerProps) {
       return;
     }
     try {
-      // TODO: fix invalid from p2p-circuit
       const autoRelayMultiaddr = multiaddr(autoRelayMultiaddrAsString.trim());
-      const conn = await start(node, autoRelayMultiaddr);
-      if (conn) setIsConnected(true);
+      const hasConnected = await start(node, autoRelayMultiaddr, logMessage);
+      if (hasConnected) setIsConnected(true);
     } catch (e) {
       logMessage(`Invalid multiaddress`);
       return;

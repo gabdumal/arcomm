@@ -50,10 +50,20 @@ export default function App({ behaviour }: AppProps) {
           </Text>
         </Box>
         <Box>
-          <Text bold>Public key: </Text>
-          <Text bold color="blue">
-            {node?.peerId?.publicKey?.toString() ?? "undefined"}
-          </Text>
+          <Text bold>Multiaddress: </Text>
+          {
+            <Box flexDirection="column">
+              {multiaddrsList.length === 0 ? (
+                <Text color="magenta">none</Text>
+              ) : (
+                multiaddrsList?.map((addr, index) => (
+                  <Text key={index} color="magenta" wrap="wrap">
+                    {addr}
+                  </Text>
+                ))
+              )}
+            </Box>
+          }
         </Box>
         <Box>
           <Text bold>Listening on: </Text>
@@ -63,7 +73,7 @@ export default function App({ behaviour }: AppProps) {
                 <Text color="magenta">none</Text>
               ) : (
                 multiaddrsList?.map((addr, index) => (
-                  <Text key={index} color="magenta">
+                  <Text key={index} color="magenta" wrap="wrap">
                     {addr}
                   </Text>
                 ))
