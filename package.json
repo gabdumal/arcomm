@@ -1,0 +1,35 @@
+{
+  "name": "arcomm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "esbuild src/index.ts --bundle --packages=external --platform=node --format=esm --outdir=dist --sourcemap",
+    "lint": "pnpm exec eslint ./src/** --fix",
+    "format": "pnpm exec prettier . -w",
+    "typecheck": "pnpm exec tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "libp2p": "^2.1.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.12.0",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^22.7.4",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.10.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.0"
+  }
+}
