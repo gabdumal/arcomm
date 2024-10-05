@@ -2,8 +2,10 @@
   "cSpell.words": [
     "chainsafe",
     "Communicatio",
+    "dnsaddr",
     "Encrypters",
     "libp2p",
+    "multiaddrs",
     "Multiaddrs",
     "Muxers",
     "websocket",
