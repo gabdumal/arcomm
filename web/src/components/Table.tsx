@@ -162,7 +162,7 @@ export default function Table<T>({ columns, data }: TableProps<T>) {
               }}
             />
             <Select
-              value={getState().pagination.pageSize}
+              value={getState().pagination.pageSize.toString()}
               options={[5, 10, 20, 30].map((pageSize) => ({
                 key: pageSize.toString(),
                 value: pageSize.toString(),

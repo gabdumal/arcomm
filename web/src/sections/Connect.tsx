@@ -21,8 +21,8 @@ export default function Connect({ node }: ConnectProps) {
   const [connectedPeers, setConnectedPeers] = useState<Multiaddr[]>([]);
 
   const updateConnectedPeers = useCallback(() => {
-    const peerList = node.getPeers().flatMap((peerInfo) => {
-      const connectionsWithPeer = node.getConnections(peerInfo);
+    const peerList = node.getPeers().flatMap((peerId) => {
+      const connectionsWithPeer = node.getConnections(peerId);
       return connectionsWithPeer.map((connection) => connection.remoteAddr);
     });
     setConnectedPeers(peerList);
@@ -71,14 +71,16 @@ export default function Connect({ node }: ConnectProps) {
       />
       <div>
         <h3>Connected</h3>
-        <Table
-          columns={[{ header: "Peer Addrs", accessorKey: "peerAddr" }]}
-          data={connectedPeers.map((peerAddrs) => {
-            return {
-              peerAddr: peerAddrs.toString(),
-            };
-          })}
-        />
+        <div className="my-2">
+          <Table
+            columns={[{ header: "Peer Addrs", accessorKey: "peerAddr" }]}
+            data={connectedPeers.map((peerAddrs) => {
+              return {
+                peerAddr: peerAddrs.toString(),
+              };
+            })}
+          />
+        </div>
       </div>
     </section>
   );

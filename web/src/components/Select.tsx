@@ -9,7 +9,7 @@ function Option({ value, label }: OptionProps) {
 }
 
 interface SelectProps {
-  value: number;
+  value: string;
   options: OptionProps[];
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }

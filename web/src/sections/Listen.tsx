@@ -88,7 +88,7 @@ export default function Listen({ node, setNode }: ListenProps) {
         <div className="flex-inline flex-row whitespace-nowrap">
           <p className="inline-block font-extrabold">
             <span className="text-base">Public key:&nbsp;</span>
-            <span className="font-monospace text-wrap break-all text-base font-normal">
+            <span className="text-wrap break-all font-monospace text-base font-normal">
               {node?.peerId.publicKey
                 ? node.peerId.publicKey.toString()
                 : "unset"}
@@ -98,19 +98,21 @@ export default function Listen({ node, setNode }: ListenProps) {
       </div>
       <div>
         <h3>Listening</h3>
-        <Table
-          columns={[
-            {
-              header: "Listening Addresses",
-              accessorKey: "multiaddr",
-            },
-          ]}
-          data={listeningAddresses.map((addr) => {
-            return {
-              multiaddr: addr.toString(),
-            };
-          })}
-        />
+        <div className="my-2">
+          <Table
+            columns={[
+              {
+                header: "Listening Addresses",
+                accessorKey: "multiaddr",
+              },
+            ]}
+            data={listeningAddresses.map((addr) => {
+              return {
+                multiaddr: addr.toString(),
+              };
+            })}
+          />
+        </div>
       </div>
     </section>
   );
