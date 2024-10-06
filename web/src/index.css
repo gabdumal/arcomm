@@ -35,7 +35,8 @@
   header,
   footer,
   nav,
-  aside {
+  aside,
+  form {
     @apply flex;
     @apply flex-col;
   }
@@ -53,5 +54,10 @@
   h1 {
     @apply text-5xl;
     @apply text-primary-common;
+  }
+
+  h2 {
+    @apply text-4xl;
+    @apply text-accent-common;
   }
 }
