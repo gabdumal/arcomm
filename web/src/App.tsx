@@ -1,4 +1,4 @@
-import Form from "./components/Form";
+import Listen from "./sections/Listen";
 
 function App() {
   return (
@@ -8,7 +8,8 @@ function App() {
         <p className="font-semibold">File sharing in vaults 🔐</p>
       </header>
       <main>
-        <section className="gap-2">
+        <Listen />
+        {/* <section className="gap-2">
           <div>
             <h2>Connect</h2>
             <p>Connect to a node to enter in the network.</p>
@@ -17,14 +18,16 @@ function App() {
             inputFields={[
               {
                 inputId: "multiaddr",
+                name: "multiaddr",
                 label: "Multiaddress",
                 placeholder: "ip4/0.0.0.0/tcp/0",
                 description: "The address of the node you want to connect to.",
               },
             ]}
             submitText="Connect"
+            action={action}
           />
-        </section>
+        </section> */}
       </main>
     </article>
   );

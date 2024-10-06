@@ -60,4 +60,9 @@
     @apply text-4xl;
     @apply text-accent-common;
   }
+
+  h3 {
+    @apply text-3xl;
+    @apply text-secondary-common;
+  }
 }

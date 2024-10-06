@@ -16,9 +16,9 @@ export default {
         darker: colors.green[700],
       },
       secondary: {
-        common: colors.emerald[200],
-        dark: colors.emerald[300],
-        darker: colors.emerald[400],
+        common: colors.orange[400],
+        dark: colors.orange[500],
+        darker: colors.orange[600],
       },
       accent: {
         common: colors.teal[500],
@@ -31,9 +31,15 @@ export default {
         darker: colors.red[700],
       },
       inactive: {
+        light: colors.neutral[300],
         common: colors.neutral[400],
         dark: colors.neutral[500],
         darker: colors.neutral[600],
+      },
+      faint: {
+        light: colors.neutral[50],
+        common: colors.neutral[100],
+        dark: colors.neutral[200],
       },
       light: colors.neutral[50],
       dark: colors.neutral[950],
