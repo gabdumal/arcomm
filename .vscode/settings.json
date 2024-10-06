@@ -1,11 +1,13 @@
 {
   "cSpell.words": [
     "arcomm",
+    "bootstrapper",
     "bootstrappers",
     "chainsafe",
     "Communicatio",
     "dnsaddr",
     "Encrypters",
+    "gossipsub",
     "ipfs",
     "kademlia",
     "Kademlia",

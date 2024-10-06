@@ -6,6 +6,7 @@ import Dialer from "./behaviours/Dialer.tsx";
 import Kademlia from "./behaviours/Kademlia.tsx";
 import Listener from "./behaviours/Listener.tsx";
 import MDNS from "./behaviours/MDNS.tsx";
+import PubSub from "./behaviours/PubSub.tsx";
 import Relay from "./behaviours/Relay.tsx";
 import { Action, Behaviour } from "./types.ts";
 
@@ -81,6 +82,8 @@ export default function App({ behaviour }: AppProps) {
           <Kademlia node={node} setNode={setNode} setLog={setLog} />
         ) : behaviour === Behaviour.MDNS ? (
           <MDNS node={node} setNode={setNode} setLog={setLog} />
+        ) : behaviour === Behaviour.PubSub ? (
+          <PubSub node={node} setNode={setNode} setLog={setLog} />
         ) : behaviour === Behaviour.Relay ? (
           <Relay node={node} setNode={setNode} setLog={setLog} />
         ) : behaviour === Behaviour.Listener ? (
