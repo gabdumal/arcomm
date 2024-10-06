@@ -4,12 +4,12 @@ import { tcp } from "@libp2p/tcp";
 import { multiaddr, Multiaddr } from "@multiformats/multiaddr";
 import { Box, Text } from "ink";
 import TextInput from "ink-text-input";
-import { pipe } from "it-pipe";
+import { lpStream } from "it-length-prefixed-stream";
 import { createLibp2p, Libp2p } from "libp2p";
 import { useEffect, useState } from "react";
 import { LogMessage } from "src/App.tsx";
 
-const ECHO_PROTOCOL = "/echo/1.0.0";
+const REQ_RESP_PROTOCOL = "/request-response/1.0.0";
 
 async function init() {
   return await createLibp2p({
@@ -39,28 +39,25 @@ async function run(
   remoteMultiaddress: Multiaddr,
   logMessage: LogMessage,
 ) {
-  const stream = await node.dialProtocol(remoteMultiaddress, ECHO_PROTOCOL);
+  const stream = await node.dialProtocol(remoteMultiaddress, REQ_RESP_PROTOCOL);
 
-  const output = await pipe(
-    async function* () {
-      // The stream input must be bytes
-      yield new TextEncoder().encode("hello world");
-    },
-    stream,
-    async (source) => {
-      let string = "";
-      const decoder = new TextDecoder();
+  // lpStream lets us read/write in a predetermined order
+  const lp = lpStream(stream);
 
-      for await (const buf of source) {
-        // buf is a `Uint8ArrayList` so we must turn it into a `Uint8Array` before decoding it
-        string += decoder.decode(buf.subarray());
-      }
-
-      return string;
-    },
+  // send the query
+  await lp.write(
+    new TextEncoder().encode(
+      JSON.stringify({
+        question: "What is the air-speed velocity of an unladen swallow?",
+      }),
+    ),
   );
 
-  logMessage("Received:", output);
+  // read the response
+  const res = await lp.read();
+  const output = JSON.parse(new TextDecoder().decode(res.subarray()));
+
+  logMessage(`The answer is: "${output.answer}"`);
 }
 
 interface LocalProps {

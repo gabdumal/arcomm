@@ -10,7 +10,7 @@ const cli = meow(
     $ my-cli <input>
 
   Options
-    --example, -e  Set the example (choices: ${Example.Kademlia}, ${Example.MDNS}, ${Example.PubSub}, ${Example.Echo_Remote}, ${Example.Echo_Local}, ${Example.Relay}, ${Example.Listener}, ${Example.Dialer}) [default: ${Example.Kademlia}]
+    --example, -e  Set the example (choices: ${Example.Kademlia}, ${Example.MDNS}, ${Example.PubSub}, ${Example.Echo_Remote}, ${Example.Echo_Local}, ${Example.Request_Remote}, ${Example.Request_Local}, ${Example.Relay}, ${Example.Listener}, ${Example.Dialer}) [default: ${Example.Kademlia}]
 
   Examples
     $ my-cli --example=${Example.Kademlia}
@@ -26,13 +26,15 @@ const cli = meow(
           Example.PubSub,
           Example.Echo_Remote,
           Example.Echo_Local,
+          Example.Request_Remote,
+          Example.Request_Local,
           Example.Relay,
           Example.Listener,
           Example.Dialer,
         ],
         isRequired: true,
         isMultiple: false,
-        shortFlag: "b",
+        shortFlag: "e",
         default: Example.Kademlia,
       },
     },

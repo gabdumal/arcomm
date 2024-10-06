@@ -10,6 +10,8 @@ import Listener from "./examples/Listener.tsx";
 import MDNS from "./examples/MDNS.tsx";
 import PubSub from "./examples/PubSub.tsx";
 import Relay from "./examples/Relay.tsx";
+import RequestLocal from "./examples/request/Local.tsx";
+import RequestRemote from "./examples/request/Remote.tsx";
 import { Example } from "./examples/types.ts";
 import { Action } from "./types.ts";
 
@@ -91,6 +93,10 @@ export default function App({ example }: AppProps) {
           <EchoRemote node={node} setNode={setNode} setLog={setLog} />
         ) : example === Example.Echo_Local ? (
           <EchoLocal node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Request_Remote ? (
+          <RequestRemote node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Request_Local ? (
+          <RequestLocal node={node} setNode={setNode} setLog={setLog} />
         ) : example === Example.Relay ? (
           <Relay node={node} setNode={setNode} setLog={setLog} />
         ) : example === Example.Listener ? (
