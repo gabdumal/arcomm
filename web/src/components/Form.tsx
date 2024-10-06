@@ -4,7 +4,9 @@ import InputField, { InputFieldProps } from "./InputField";
 interface FormProps {
   inputFields: InputFieldProps[];
   submitText: string;
-  action: (formData: FormData) => void;
+  action:
+    | ((formData: FormData) => void)
+    | ((formData: FormData) => Promise<void>);
 }
 
 export default function Form({ inputFields, submitText, action }: FormProps) {
@@ -12,8 +14,15 @@ export default function Form({ inputFields, submitText, action }: FormProps) {
     <form
       className="gap-2"
       onSubmit={(event) => {
-        event.preventDefault();
-        action(new FormData(event.target as HTMLFormElement));
+        const handleSubmit = async (
+          event: React.FormEvent<HTMLFormElement>,
+        ) => {
+          event.preventDefault();
+          await action(new FormData(event.target as HTMLFormElement));
+        };
+        handleSubmit(event).catch((error: unknown) => {
+          console.error(error);
+        });
       }}
     >
       {inputFields.map((inputField) => (

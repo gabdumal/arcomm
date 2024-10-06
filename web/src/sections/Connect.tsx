@@ -64,6 +64,7 @@ export default function Connect({ node }: ConnectProps) {
             label: "Multiaddress",
             placeholder: "ip4/0.0.0.0/tcp/0",
             description: "The address of the node you want to connect to.",
+            type: "text",
           },
         ]}
         submitText="Connect"

@@ -1,36 +1,91 @@
 import { useCallback, useEffect, useState } from "react";
+import { fromString } from "uint8arrays/from-string";
 import Form from "../components/Form";
 import Select from "../components/Select";
 import Table from "../components/Table";
 import { Libp2pNode } from "../types";
+
+interface Message {
+  from: string;
+  data: string;
+}
+
+interface Topic {
+  name: string;
+  messages: Message[];
+}
 
 interface PubSubProps {
   node: Libp2pNode;
 }
 
 export default function PubSub({ node }: PubSubProps) {
-  const [subscribedTopics, setSubscribedTopics] = useState<string[]>([]);
+  const [subscribedTopics, setSubscribedTopics] = useState<Map<string, Topic>>(
+    new Map(),
+  );
   const [currentTopic, setCurrentTopic] = useState<string | null>(null);
   const [subscribersOnCurrentTopic, setSubscribersToCurrentTopic] = useState<
     { peerAddr: string }[]
   >([]);
 
+  useEffect(() => {
+    const addListener = (
+      node: Libp2pNode,
+      setSubscribedTopics: React.Dispatch<
+        React.SetStateAction<Map<string, Topic>>
+      >,
+    ) => {
+      node.services.pubsub.addEventListener("message", (event) => {
+        console.log("message event", event);
+        const topic = event.detail.topic;
+        const message = new TextDecoder().decode(event.detail.data);
+
+        setSubscribedTopics((prev) => {
+          const updatedTopics = new Map(prev);
+          const topicObj = updatedTopics.get(topic);
+          if (topicObj) {
+            topicObj.messages.push({ from: "?", data: message });
+          }
+          return updatedTopics;
+        });
+      });
+    };
+    addListener(node, setSubscribedTopics);
+  }, [node, setSubscribedTopics]);
+
   function subscribeToTopic(topic: string) {
+    const trimmedTopic = topic.trim();
+    const isAlreadySubscribed = subscribedTopics.has(trimmedTopic);
+    if (isAlreadySubscribed) return;
+
+    const topicObj = {
+      name: trimmedTopic,
+      messages: [],
+    };
+
     const services = node.services;
     const pubSubService = services.pubsub;
-    pubSubService.subscribe(topic.trim());
+
+    pubSubService.subscribe(trimmedTopic);
     console.log(`Subscribed to ${topic}`);
-    setSubscribedTopics((prev) => {
-      if (prev.includes(topic)) return prev;
-      return [...prev, topic];
-    });
+
+    setSubscribedTopics((prev) => new Map(prev.set(trimmedTopic, topicObj)));
   }
 
-  function action(formData: FormData) {
+  function subscribeAction(formData: FormData) {
     const topic = formData.get("topic") as string;
     if (!topic) return;
     subscribeToTopic(topic);
     setCurrentTopic(topic);
+  }
+
+  async function sendMessageToTopicAction(formData: FormData) {
+    const message = formData.get("message") as string;
+    if (!currentTopic || !message) return;
+    const services = node.services;
+    const pubSubService = services.pubsub;
+    await pubSubService.publish(currentTopic, fromString(message));
+    console.log(`Sent message to ${currentTopic}`);
   }
 
   const updateSubscribers = useCallback(
@@ -72,28 +127,27 @@ export default function PubSub({ node }: PubSubProps) {
             label: "Topic",
             placeholder: "Movies",
             description: "The topic you want to subscribe to.",
+            type: "text",
           },
         ]}
         submitText="Subscribe"
-        action={action}
+        action={subscribeAction}
       />
       <div>
         <h3>Subscribed Topics</h3>
         <div className="my-2">
           <Table
             columns={[{ header: "Topics", accessorKey: "topic" }]}
-            data={subscribedTopics.map((topic) => {
-              return {
-                topic,
-              };
-            })}
+            data={Array.from(subscribedTopics.keys()).map((topic) => ({
+              topic,
+            }))}
           />
         </div>
       </div>
       {currentTopic && (
         <div>
           <h3>Current Topic</h3>
-          <div className="my-2">
+          <div className="mt-2">
             <Select
               value={currentTopic}
               onChange={(e) => {
@@ -101,17 +155,47 @@ export default function PubSub({ node }: PubSubProps) {
                 setCurrentTopic(topic);
                 updateSubscribers(topic);
               }}
-              options={subscribedTopics.map((topic) => ({
+              options={Array.from(subscribedTopics.keys()).map((topic) => ({
                 key: topic,
                 value: topic,
                 label: topic,
               }))}
             />
           </div>
-          <Table
-            columns={[{ header: "Peer Addrs", accessorKey: "peerAddr" }]}
-            data={subscribersOnCurrentTopic}
+          <div className="my-2">
+            <Table
+              columns={[{ header: "Peer Addrs", accessorKey: "peerAddr" }]}
+              data={subscribersOnCurrentTopic}
+            />
+          </div>
+          <Form
+            inputFields={[
+              {
+                inputId: "message",
+                name: "message",
+                label: "Message",
+                placeholder: "Send a message",
+                description: "The message you want to send on this topic.",
+                type: "text",
+              },
+            ]}
+            submitText="Send"
+            action={sendMessageToTopicAction}
           />
+          <div className="my-2">
+            <Table
+              columns={[
+                { header: "From", accessorKey: "from" },
+                { header: "Data", accessorKey: "data" },
+              ]}
+              data={
+                subscribedTopics.get(currentTopic)?.messages.map((message) => ({
+                  from: message.from,
+                  data: message.data,
+                })) ?? []
+              }
+            />
+          </div>
         </div>
       )}
     </section>

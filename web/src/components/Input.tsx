@@ -1,3 +1,5 @@
+import { cx } from "class-variance-authority";
+
 interface NumberInputProps {
   type: "number";
   step: number;
@@ -12,9 +14,11 @@ interface TextInputProps {
   defaultValue?: string;
 }
 
-type InputProps = {
+export type InputProps = {
   inputId: string;
   name: string;
+  disabled?: boolean;
+  hidden?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 } & (NumberInputProps | TextInputProps);
 
@@ -24,6 +28,8 @@ export default function Input({
   defaultValue,
   onChange,
   type,
+  disabled,
+  hidden,
   ...props
 }: InputProps) {
   return (
@@ -33,7 +39,8 @@ export default function Input({
       defaultValue={defaultValue}
       type={type}
       onChange={onChange}
-      className="w-full rounded-md p-2"
+      disabled={disabled}
+      className={cx("w-full rounded-md p-2", hidden && "hidden")}
       {...props}
     />
   );
