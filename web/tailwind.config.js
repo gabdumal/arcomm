@@ -8,6 +8,7 @@ export default {
     fontFamily: {
       heading: ["Raleway", "sans-serif"],
       common: ["Montserrat", "sans-serif"],
+      monospace: ["monospace"],
     },
     colors: {
       primary: {

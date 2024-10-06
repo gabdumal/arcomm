@@ -30,12 +30,13 @@
   }
 
   div,
+  header,
+  main,
+  footer,
+  aside,
   article,
   section,
-  header,
-  footer,
   nav,
-  aside,
   form,
   p {
     @apply flex;

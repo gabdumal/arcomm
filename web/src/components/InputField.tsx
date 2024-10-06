@@ -1,3 +1,5 @@
+import Input from "./Input";
+
 export interface InputFieldProps {
   inputId: string;
   name: string;
@@ -24,12 +26,11 @@ export default function InputField({
         </label>
         <p className="text-sm">{description}</p>
       </div>
-      <input
-        id={inputId}
+      <Input
+        inputId={inputId}
         name={name}
         type="text"
         placeholder={placeholder}
-        className="w-full rounded-md p-2"
       />
     </div>
   );

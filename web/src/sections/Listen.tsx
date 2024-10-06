@@ -1,25 +1,22 @@
-import { gossipsub, GossipsubEvents } from "@chainsafe/libp2p-gossipsub";
+import { gossipsub } from "@chainsafe/libp2p-gossipsub";
 import { noise } from "@chainsafe/libp2p-noise";
 import { yamux } from "@chainsafe/libp2p-yamux";
 import { circuitRelayTransport } from "@libp2p/circuit-relay-v2";
 import { dcutr } from "@libp2p/dcutr";
-import { Identify, identify } from "@libp2p/identify";
-import { PubSub } from "@libp2p/interface";
+import { identify } from "@libp2p/identify";
 import { webRTC } from "@libp2p/webrtc";
 import { webSockets } from "@libp2p/websockets";
 import * as filters from "@libp2p/websockets/filters";
-import { cx } from "class-variance-authority";
-import { createLibp2p, Libp2p } from "libp2p";
-import { useEffect, useState } from "react";
+import { Multiaddr } from "@multiformats/multiaddr";
+import { createLibp2p } from "libp2p";
+import { useState } from "react";
 import Form from "../components/Form";
+import Table from "../components/Table";
+import { Libp2pNode } from "../types";
 
-type Node = Libp2p<{
-  identify: Identify;
-  pubsub: PubSub<GossipsubEvents>;
-  dcutr: unknown;
-}>;
-
-async function initNode(): Promise<Node> {
+async function initNode(
+  setListeningAddresses: (multiaddrs: Multiaddr[]) => void,
+): Promise<Libp2pNode> {
   const node = await createLibp2p({
     addresses: {
       listen: ["/webrtc"],
@@ -52,21 +49,42 @@ async function initNode(): Promise<Node> {
       dcutr: dcutr(),
     },
   });
+
+  node.addEventListener("self:peer:update", () => {
+    const multiaddrs = node.getMultiaddrs();
+    setListeningAddresses(multiaddrs);
+  });
+
   return node;
 }
 
-// function action(formData: FormData) {
-//   const multiaddr = formData.get("multiaddr") as string;
-//   console.log(`Connecting to ${multiaddr}`);
+// function updatePeerList(node: Libp2pNode) {
+//   const peerList = node.getPeers().map((peerId) => {
+//     for (const conn of node.getConnections(peerId)) {
+//       const addr = document.createElement("li");
+//       addr.textContent = conn.remoteAddr.toString();
+
+//       addrList.appendChild(addr);
+//     }
+
+//     el.appendChild(addrList);
+
+//     return el;
+//   });
+//   DOM.peerConnectionsList().replaceChildren(...peerList);
 // }
 
-export default function Listen() {
-  const [node, setNode] = useState<Node | null>(null);
-  const [listeningAddrs, setListeningAddrs] = useState<string[]>([]);
+interface ListenProps {
+  node: Libp2pNode | null;
+  setNode: (node: Libp2pNode) => void;
+}
 
-  function handleSubmit() {
+export default function Listen({ node, setNode }: ListenProps) {
+  const [listeningAddresses, setListeningAddresses] = useState<Multiaddr[]>([]);
+
+  function action() {
     const initializeNode = async () => {
-      const node = await initNode();
+      const node = await initNode(setListeningAddresses);
       setNode(node);
     };
     initializeNode().catch((error: unknown) => {
@@ -74,73 +92,43 @@ export default function Listen() {
     });
   }
 
-  useEffect(() => {
-    console.log("Node", node);
-    if (!node) return;
-    const addrs = node.getMultiaddrs().map((addr) => addr.toString());
-    setListeningAddrs(addrs);
-  }, [node]);
-
   return (
     <section className="gap-4">
       <div>
         <h2>Listen</h2>
         <p>Listen to a port to accept incoming connections.</p>
       </div>
-      <Form
-        inputFields={
-          [
-            //   {
-            //     inputId: "multiaddr",
-            //     name: "multiaddr",
-            //     label: "Multiaddress",
-            //     placeholder: "ip4/0.0.0.0/tcp/0",
-            //     description: "The address you want to listen to.",
-            //   },
-          ]
-        }
-        submitText="Listen"
-        action={handleSubmit}
-      />
+      <Form inputFields={[]} submitText="Listen" action={action} />
       <div>
         <h3>Node</h3>
-        <div className="inline-flex whitespace-nowrap">
-          <p className="font-extrabold">Public key:&nbsp;</p>
-          <pre className="text-wrap break-all">
-            {node?.peerId.publicKey
-              ? node.peerId.publicKey.toString()
-              : "unset"}
-          </pre>
+        <div className="flex-inline flex-row whitespace-nowrap">
+          <p className="inline-block font-extrabold">
+            <span className="text-base">Public key:&nbsp;</span>
+            <span className="font-monospace text-wrap break-all text-base font-normal">
+              {node?.peerId.publicKey
+                ? node.peerId.publicKey.toString()
+                : "unset"}
+            </span>
+          </p>
         </div>
       </div>
-      <div className="mt-2 gap-2">
+      <div>
         <h3>Listening</h3>
-        <table>
-          <thead>
-            <tr>
-              <th className="text-start text-xl">Multiaddress</th>
-            </tr>
-          </thead>
-          <tbody className="h-max-40 overflow-scroll">
-            {listeningAddrs.length === 0 ? (
-              <tr className={tableRow}>
-                <td colSpan={1} className={tableData}>
-                  No addresses
-                </td>
-              </tr>
-            ) : (
-              listeningAddrs.map((addr, index) => (
-                <tr key={index} className={tableRow}>
-                  <td className={tableData}>{addr}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <Table
+          columns={[
+            {
+              header: "Listening Addresses",
+              accessorKey: "multiaddr",
+            },
+          ]}
+          data={listeningAddresses.map((addr) => {
+            return {
+              multiaddr: addr.toString(),
+            };
+          })}
+          emptyMessage="No addresses"
+        />
       </div>
     </section>
   );
 }
-
-const tableRow = cx(["odd:bg-faint-common", "even:bg-faint-light"]);
-const tableData = cx(["bg-opacity-0", "px-2 py-1"]);

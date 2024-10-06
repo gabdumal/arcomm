@@ -12,6 +12,7 @@
     "@libp2p/websockets": "^9.0.0",
     "@multiformats/multiaddr": "^12.3.1",
     "@tailwindcss/forms": "^0.5.9",
+    "@tanstack/react-table": "^8.20.5",
     "class-variance-authority": "^0.7.0",
     "libp2p": "^2.0.0",
     "react": "^18.3.1",

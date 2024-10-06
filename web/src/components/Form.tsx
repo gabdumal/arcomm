@@ -9,15 +9,17 @@ interface FormProps {
 
 export default function Form({ inputFields, submitText, action }: FormProps) {
   return (
-    <form className="gap-2" onSubmit={
-        (event) => {
-            event.preventDefault();
-            action(new FormData(event.target as HTMLFormElement));
-    }}>
+    <form
+      className="gap-2"
+      onSubmit={(event) => {
+        event.preventDefault();
+        action(new FormData(event.target as HTMLFormElement));
+      }}
+    >
       {inputFields.map((inputField) => (
         <InputField key={inputField.inputId} {...inputField} />
       ))}
-      <Button text={submitText} type="submit" />
+      <Button text={submitText} type="submit" intent="accent" />
     </form>
   );
 }

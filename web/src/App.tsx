@@ -1,33 +1,20 @@
+import { useState } from "react";
+import Connect from "./sections/Connect";
 import Listen from "./sections/Listen";
+import { Libp2pNode } from "./types";
 
 function App() {
+  const [node, setNode] = useState<Libp2pNode | null>(null);
+
   return (
     <article className="gap-4 px-4 py-4 sm:px-8">
       <header>
         <h1>Arcomm</h1>
         <p className="font-semibold">File sharing in vaults 🔐</p>
       </header>
-      <main>
-        <Listen />
-        {/* <section className="gap-2">
-          <div>
-            <h2>Connect</h2>
-            <p>Connect to a node to enter in the network.</p>
-          </div>
-          <Form
-            inputFields={[
-              {
-                inputId: "multiaddr",
-                name: "multiaddr",
-                label: "Multiaddress",
-                placeholder: "ip4/0.0.0.0/tcp/0",
-                description: "The address of the node you want to connect to.",
-              },
-            ]}
-            submitText="Connect"
-            action={action}
-          />
-        </section> */}
+      <main className="gap-4">
+        <Listen node={node} setNode={setNode} />
+        {node && <Connect node={node} />}
       </main>
     </article>
   );
