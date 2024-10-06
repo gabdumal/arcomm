@@ -15,7 +15,6 @@ import Select from "./Select";
 interface TableProps<T> {
   columns: ColumnDef<T>[];
   data: T[];
-  emptyMessage?: string;
 }
 
 export default function Table<T>({ columns, data }: TableProps<T>) {

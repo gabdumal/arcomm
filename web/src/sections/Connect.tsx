@@ -1,12 +1,41 @@
 import { multiaddr, Multiaddr } from "@multiformats/multiaddr";
+import { useCallback, useEffect, useState } from "react";
 import Form from "../components/Form";
+import Table from "../components/Table";
 import { Libp2pNode } from "../types";
 
 interface ConnectProps {
   node: Libp2pNode;
 }
 
+function addListeners(node: Libp2pNode, updateConnectedPeers: () => void) {
+  node.addEventListener("connection:open", () => {
+    updateConnectedPeers();
+  });
+  node.addEventListener("connection:close", () => {
+    updateConnectedPeers();
+  });
+}
+
 export default function Connect({ node }: ConnectProps) {
+  const [connectedPeers, setConnectedPeers] = useState<Multiaddr[]>([]);
+
+  const updateConnectedPeers = useCallback(() => {
+    const peerList = node.getPeers().flatMap((peerInfo) => {
+      const connectionsWithPeer = node.getConnections(peerInfo);
+      return connectionsWithPeer.map((connection) => connection.remoteAddr);
+    });
+    setConnectedPeers(peerList);
+  }, [node]);
+
+  useEffect(() => {
+    addListeners(node, updateConnectedPeers);
+    return () => {
+      node.removeEventListener("connection:open");
+      node.removeEventListener("connection:close");
+    };
+  }, [node, updateConnectedPeers]);
+
   function connect(multiaddr: Multiaddr) {
     node.dial(multiaddr).catch((error: unknown) => {
       console.error(error);
@@ -42,6 +71,14 @@ export default function Connect({ node }: ConnectProps) {
       />
       <div>
         <h3>Connected</h3>
+        <Table
+          columns={[{ header: "Peer Addrs", accessorKey: "peerAddrs" }]}
+          data={connectedPeers.map((peerAddrs) => {
+            return {
+              peerAddrs: peerAddrs.toString(),
+            };
+          })}
+        />
       </div>
     </section>
   );

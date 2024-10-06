@@ -58,22 +58,6 @@ async function initNode(
   return node;
 }
 
-// function updatePeerList(node: Libp2pNode) {
-//   const peerList = node.getPeers().map((peerId) => {
-//     for (const conn of node.getConnections(peerId)) {
-//       const addr = document.createElement("li");
-//       addr.textContent = conn.remoteAddr.toString();
-
-//       addrList.appendChild(addr);
-//     }
-
-//     el.appendChild(addrList);
-
-//     return el;
-//   });
-//   DOM.peerConnectionsList().replaceChildren(...peerList);
-// }
-
 interface ListenProps {
   node: Libp2pNode | null;
   setNode: (node: Libp2pNode) => void;
@@ -126,7 +110,6 @@ export default function Listen({ node, setNode }: ListenProps) {
               multiaddr: addr.toString(),
             };
           })}
-          emptyMessage="No addresses"
         />
       </div>
     </section>
