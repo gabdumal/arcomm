@@ -4,10 +4,6 @@ import Form from "../components/Form";
 import Table from "../components/Table";
 import { Libp2pNode } from "../types";
 
-interface ConnectProps {
-  node: Libp2pNode;
-}
-
 function addListeners(node: Libp2pNode, updateConnectedPeers: () => void) {
   node.addEventListener("connection:open", () => {
     updateConnectedPeers();
@@ -15,6 +11,10 @@ function addListeners(node: Libp2pNode, updateConnectedPeers: () => void) {
   node.addEventListener("connection:close", () => {
     updateConnectedPeers();
   });
+}
+
+interface ConnectProps {
+  node: Libp2pNode;
 }
 
 export default function Connect({ node }: ConnectProps) {
@@ -72,10 +72,10 @@ export default function Connect({ node }: ConnectProps) {
       <div>
         <h3>Connected</h3>
         <Table
-          columns={[{ header: "Peer Addrs", accessorKey: "peerAddrs" }]}
+          columns={[{ header: "Peer Addrs", accessorKey: "peerAddr" }]}
           data={connectedPeers.map((peerAddrs) => {
             return {
-              peerAddrs: peerAddrs.toString(),
+              peerAddr: peerAddrs.toString(),
             };
           })}
         />

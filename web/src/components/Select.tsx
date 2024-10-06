@@ -4,12 +4,8 @@ interface OptionProps {
   label: string;
 }
 
-function Option({ key, value, label }: OptionProps) {
-  return (
-    <option key={key} value={value}>
-      {label}
-    </option>
-  );
+function Option({ value, label }: OptionProps) {
+  return <option value={value}>{label}</option>;
 }
 
 interface SelectProps {

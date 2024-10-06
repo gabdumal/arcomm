@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Connect from "./sections/Connect";
 import Listen from "./sections/Listen";
+import PubSub from "./sections/PubSub";
 import { Libp2pNode } from "./types";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <main className="gap-4">
         <Listen node={node} setNode={setNode} />
         {node && <Connect node={node} />}
+        {node && <PubSub node={node} />}
       </main>
     </article>
   );
