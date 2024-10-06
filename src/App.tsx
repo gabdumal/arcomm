@@ -2,13 +2,16 @@ import { Box, Text, useApp } from "ink";
 import SelectInput from "ink-select-input";
 import { Libp2p } from "libp2p";
 import { useState } from "react";
-import Dialer from "./behaviours/Dialer.tsx";
-import Kademlia from "./behaviours/Kademlia.tsx";
-import Listener from "./behaviours/Listener.tsx";
-import MDNS from "./behaviours/MDNS.tsx";
-import PubSub from "./behaviours/PubSub.tsx";
-import Relay from "./behaviours/Relay.tsx";
-import { Action, Behaviour } from "./types.ts";
+import Dialer from "./examples/Dialer.tsx";
+import EchoLocal from "./examples/echo/Local.tsx";
+import EchoRemote from "./examples/echo/Remote.tsx";
+import Kademlia from "./examples/Kademlia.tsx";
+import Listener from "./examples/Listener.tsx";
+import MDNS from "./examples/MDNS.tsx";
+import PubSub from "./examples/PubSub.tsx";
+import Relay from "./examples/Relay.tsx";
+import { Example } from "./examples/types.ts";
+import { Action } from "./types.ts";
 
 export type LogMessage = (...messages: string[]) => void;
 
@@ -18,9 +21,9 @@ const items = [
 ];
 
 interface AppProps {
-  behaviour: Behaviour;
+  example: Example;
 }
-export default function App({ behaviour }: AppProps) {
+export default function App({ example }: AppProps) {
   const { exit } = useApp();
 
   const [log, setLog] = useState<string>("");
@@ -46,9 +49,9 @@ export default function App({ behaviour }: AppProps) {
           Arcana Communicatio
         </Text>
         <Box>
-          <Text bold>Behaviour: </Text>
+          <Text bold>Example: </Text>
           <Text bold color="green">
-            {behaviour.toLocaleUpperCase()}
+            {example.toLocaleUpperCase()}
           </Text>
         </Box>
         <Box>
@@ -78,20 +81,24 @@ export default function App({ behaviour }: AppProps) {
         <Text>{log}</Text>
       </Box>
       <Box>
-        {behaviour === Behaviour.Kademlia ? (
+        {example === Example.Kademlia ? (
           <Kademlia node={node} setNode={setNode} setLog={setLog} />
-        ) : behaviour === Behaviour.MDNS ? (
+        ) : example === Example.MDNS ? (
           <MDNS node={node} setNode={setNode} setLog={setLog} />
-        ) : behaviour === Behaviour.PubSub ? (
+        ) : example === Example.PubSub ? (
           <PubSub node={node} setNode={setNode} setLog={setLog} />
-        ) : behaviour === Behaviour.Relay ? (
+        ) : example === Example.Echo_Remote ? (
+          <EchoRemote node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Echo_Local ? (
+          <EchoLocal node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Relay ? (
           <Relay node={node} setNode={setNode} setLog={setLog} />
-        ) : behaviour === Behaviour.Listener ? (
+        ) : example === Example.Listener ? (
           <Listener node={node} setNode={setNode} setLog={setLog} />
-        ) : behaviour === Behaviour.Dialer ? (
+        ) : example === Example.Dialer ? (
           <Dialer node={node} setNode={setNode} setLog={setLog} />
         ) : (
-          <Text>Unknown behaviour</Text>
+          <Text>Unknown example</Text>
         )}
       </Box>
       <Box marginTop={1} flexDirection="column">

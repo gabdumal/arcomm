@@ -2,7 +2,7 @@
 import { render } from "ink";
 import meow from "meow";
 import App from "./App.tsx";
-import { Behaviour } from "./types.ts";
+import { Example } from "./examples/types.ts";
 
 const cli = meow(
   `
@@ -10,33 +10,35 @@ const cli = meow(
     $ my-cli <input>
 
   Options
-    --behaviour, -b  Set the behaviour (choices: ${Behaviour.Kademlia}, ${Behaviour.MDNS}, ${Behaviour.PubSub} ${Behaviour.Relay}, ${Behaviour.Listener}, ${Behaviour.Dialer}) [default: ${Behaviour.Kademlia}]
+    --example, -e  Set the example (choices: ${Example.Kademlia}, ${Example.MDNS}, ${Example.PubSub}, ${Example.Echo_Remote}, ${Example.Echo_Local}, ${Example.Relay}, ${Example.Listener}, ${Example.Dialer}) [default: ${Example.Kademlia}]
 
   Examples
-    $ my-cli --behaviour=${Behaviour.Kademlia}
+    $ my-cli --example=${Example.Kademlia}
 `,
   {
     importMeta: import.meta,
     flags: {
-      behaviour: {
+      example: {
         type: "string",
         choices: [
-          Behaviour.Kademlia,
-          Behaviour.MDNS,
-          Behaviour.PubSub,
-          Behaviour.Relay,
-          Behaviour.Listener,
-          Behaviour.Dialer,
+          Example.Kademlia,
+          Example.MDNS,
+          Example.PubSub,
+          Example.Echo_Remote,
+          Example.Echo_Local,
+          Example.Relay,
+          Example.Listener,
+          Example.Dialer,
         ],
         isRequired: true,
         isMultiple: false,
         shortFlag: "b",
-        default: Behaviour.Kademlia,
+        default: Example.Kademlia,
       },
     },
   },
 );
 
-render(<App behaviour={cli.flags.behaviour as Behaviour} />, {
-  exitOnCtrlC: false,
+render(<App example={cli.flags.example as Example} />, {
+  exitOnCtrlC: true,
 });

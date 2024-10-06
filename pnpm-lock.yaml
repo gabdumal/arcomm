@@ -53,6 +53,9 @@ importers:
       ink-text-input:
         specifier: ^6.0.0
         version: 6.0.0(ink@5.0.1(@types/react@18.3.11)(react@18.3.1))(react@18.3.1)
+      it-pipe:
+        specifier: ^3.0.1
+        version: 3.0.1
       libp2p:
         specifier: ^2.1.5
         version: 2.1.5
