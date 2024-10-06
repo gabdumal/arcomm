@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply text-dark;
+    @apply bg-light;
+  }
+
+  body {
+    @apply font-common;
+    @apply h-dvh;
+  }
+
+  #root {
+    @apply flex;
+    @apply flex-col;
+    @apply h-full;
+  }
+
+  div,
+  span,
+  p,
+  a,
+  button,
+  input,
+  textarea {
+    @apply font-common;
+  }
+
+  div,
+  article,
+  section,
+  header,
+  footer,
+  nav,
+  aside {
+    @apply flex;
+    @apply flex-col;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+    @apply font-extrabold;
+  }
+
+  h1 {
+    @apply text-5xl;
+    @apply text-primary-common;
+  }
+}
