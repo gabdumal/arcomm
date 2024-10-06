@@ -36,7 +36,8 @@
   footer,
   nav,
   aside,
-  form {
+  form,
+  p {
     @apply flex;
     @apply flex-col;
   }
@@ -64,5 +65,18 @@
   h3 {
     @apply text-3xl;
     @apply text-secondary-common;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a,
+  input,
+  textarea {
+    @apply items-baseline;
   }
 }

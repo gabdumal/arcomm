@@ -1,9 +1,22 @@
 {
   "dependencies": {
+    "@chainsafe/libp2p-gossipsub": "^14.0.0",
+    "@chainsafe/libp2p-noise": "^16.0.0",
+    "@chainsafe/libp2p-yamux": "^7.0.0",
+    "@libp2p/circuit-relay-v2": "^2.0.0",
+    "@libp2p/dcutr": "^2.0.0",
+    "@libp2p/identify": "^3.0.0",
+    "@libp2p/interface": "^2.1.2",
+    "@libp2p/pubsub": "^10.0.6",
+    "@libp2p/webrtc": "^5.0.0",
+    "@libp2p/websockets": "^9.0.0",
+    "@multiformats/multiaddr": "^12.3.1",
     "@tailwindcss/forms": "^0.5.9",
     "class-variance-authority": "^0.7.0",
-    "react": "19.0.0-rc-1460d67c-20241003",
-    "react-dom": "19.0.0-rc-1460d67c-20241003"
+    "libp2p": "^2.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.0",
+    "uint8arrays": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
