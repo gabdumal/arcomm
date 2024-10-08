@@ -32,15 +32,17 @@ const cli = meow(
           Example.Listener,
           Example.Dialer,
         ],
-        isRequired: true,
+        isRequired: false,
         isMultiple: false,
         shortFlag: "e",
-        default: Example.Kademlia,
       },
     },
   },
 );
 
-render(<App example={cli.flags.example as Example} />, {
-  exitOnCtrlC: true,
-});
+render(
+  <App example={cli.flags.example ? (cli.flags.example as Example) : null} />,
+  {
+    exitOnCtrlC: true,
+  },
+);

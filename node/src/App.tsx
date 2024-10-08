@@ -2,17 +2,18 @@ import { Box, Text, useApp } from "ink";
 import SelectInput from "ink-select-input";
 import { Libp2p } from "libp2p";
 import { useState } from "react";
-import Dialer from "./examples/Dialer.tsx";
-import EchoLocal from "./examples/echo/Local.tsx";
-import EchoRemote from "./examples/echo/Remote.tsx";
-import Kademlia from "./examples/Kademlia.tsx";
-import Listener from "./examples/Listener.tsx";
-import MDNS from "./examples/MDNS.tsx";
-import PubSub from "./examples/PubSub.tsx";
-import Relay from "./examples/Relay.tsx";
-import RequestLocal from "./examples/request/Local.tsx";
-import RequestRemote from "./examples/request/Remote.tsx";
+import ExampleDialer from "./examples/Dialer.tsx";
+import ExampleEchoLocal from "./examples/echo/Local.tsx";
+import ExampleEchoRemote from "./examples/echo/Remote.tsx";
+import ExampleKademlia from "./examples/Kademlia.tsx";
+import ExampleListener from "./examples/Listener.tsx";
+import ExampleMDNS from "./examples/MDNS.tsx";
+import ExamplePubSub from "./examples/PubSub.tsx";
+import ExampleRelay from "./examples/Relay.tsx";
+import ExampleRequestLocal from "./examples/request/Local.tsx";
+import ExampleRequestRemote from "./examples/request/Remote.tsx";
 import { Example } from "./examples/types.ts";
+import Relay from "./relay/Relay.tsx";
 import { Action } from "./types.ts";
 
 export type LogMessage = (...messages: string[]) => void;
@@ -23,7 +24,7 @@ const items = [
 ];
 
 interface AppProps {
-  example: Example;
+  example: Example | null;
 }
 export default function App({ example }: AppProps) {
   const { exit } = useApp();
@@ -45,16 +46,24 @@ export default function App({ example }: AppProps) {
     node?.getMultiaddrs().map((addr) => addr.toString()) ?? [];
 
   return (
-    <Box flexDirection="column" margin={1}>
+    <Box flexDirection="column" margin={0}>
       <Box flexDirection="column">
         <Text backgroundColor="gray" color="yellow" bold>
           Arcana Communicatio
         </Text>
         <Box>
-          <Text bold>Example: </Text>
-          <Text bold color="green">
-            {example.toLocaleUpperCase()}
-          </Text>
+          {example !== null ? (
+            <>
+              <Text bold>Example: </Text>
+              <Text bold color="green">
+                {example.toLocaleUpperCase()}
+              </Text>
+            </>
+          ) : (
+            <Text bold color="green">
+              RELAY
+            </Text>
+          )}
         </Box>
         <Box>
           <Text bold>Public key: </Text>
@@ -83,26 +92,28 @@ export default function App({ example }: AppProps) {
         <Text>{log}</Text>
       </Box>
       <Box>
-        {example === Example.Kademlia ? (
-          <Kademlia node={node} setNode={setNode} setLog={setLog} />
-        ) : example === Example.MDNS ? (
-          <MDNS node={node} setNode={setNode} setLog={setLog} />
-        ) : example === Example.PubSub ? (
-          <PubSub node={node} setNode={setNode} setLog={setLog} />
-        ) : example === Example.Echo_Remote ? (
-          <EchoRemote node={node} setNode={setNode} setLog={setLog} />
-        ) : example === Example.Echo_Local ? (
-          <EchoLocal node={node} setNode={setNode} setLog={setLog} />
-        ) : example === Example.Request_Remote ? (
-          <RequestRemote node={node} setNode={setNode} setLog={setLog} />
-        ) : example === Example.Request_Local ? (
-          <RequestLocal node={node} setNode={setNode} setLog={setLog} />
-        ) : example === Example.Relay ? (
+        {example === null ? (
           <Relay node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Kademlia ? (
+          <ExampleKademlia node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.MDNS ? (
+          <ExampleMDNS node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.PubSub ? (
+          <ExamplePubSub node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Echo_Remote ? (
+          <ExampleEchoRemote node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Echo_Local ? (
+          <ExampleEchoLocal node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Request_Remote ? (
+          <ExampleRequestRemote node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Request_Local ? (
+          <ExampleRequestLocal node={node} setNode={setNode} setLog={setLog} />
+        ) : example === Example.Relay ? (
+          <ExampleRelay node={node} setNode={setNode} setLog={setLog} />
         ) : example === Example.Listener ? (
-          <Listener node={node} setNode={setNode} setLog={setLog} />
+          <ExampleListener node={node} setNode={setNode} setLog={setLog} />
         ) : example === Example.Dialer ? (
-          <Dialer node={node} setNode={setNode} setLog={setLog} />
+          <ExampleDialer node={node} setNode={setNode} setLog={setLog} />
         ) : (
           <Text>Unknown example</Text>
         )}

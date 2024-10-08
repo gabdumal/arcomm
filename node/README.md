@@ -1,3 +1,3 @@
 # Arcana Communicatio
 
-<https://github.com/libp2p/js-libp2p/blob/main/doc/GETTING_STARTED.md>
+Create a file names `src/relay/addresses.json`, filled as the example `src/relay/addresses.example.json`.
