@@ -26,7 +26,7 @@ export function addListener(
       const detail = event.detail;
       const topic = detail.topic;
 
-      if (topic === FILE_SHARING_TOPIC) receiveFileChunk(node, detail.data);
+      if (topic === FILE_SHARING_TOPIC) receiveFileChunk(detail.data);
       else {
         const message = new TextDecoder().decode(detail.data);
         const from = "from" in detail ? detail.from.toString() : "unknown";
@@ -41,7 +41,7 @@ export function addListener(
 
 const receivedFiles = new Map<string, File>();
 
-function receiveFileChunk(node: Libp2pNode, data: Uint8Array) {
+function receiveFileChunk(data: Uint8Array) {
   const decoder = new TextDecoder();
   const message = decoder.decode(data);
   console.log("Received file message", message);
