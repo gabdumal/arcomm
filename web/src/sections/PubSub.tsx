@@ -1,6 +1,6 @@
 import type { Message as Libp2pMessage } from "@libp2p/interface";
 import { useCallback, useEffect, useState } from "react";
-import { fromString } from "uint8arrays/from-string";
+import { fromString } from "uint8arrays";
 import Form from "../components/Form";
 import Select from "../components/Select";
 import Table from "../components/Table";
@@ -14,10 +14,6 @@ interface Message {
 interface Topic {
   name: string;
   messages: Message[];
-}
-
-interface PubSubProps {
-  node: Libp2pNode;
 }
 
 function addListener(
@@ -35,6 +31,10 @@ function addListener(
       registerMessage(topic, message, from);
     },
   );
+}
+
+interface PubSubProps {
+  node: Libp2pNode;
 }
 
 export default function PubSub({ node }: PubSubProps) {
@@ -66,6 +66,31 @@ export default function PubSub({ node }: PubSubProps) {
       node.services.pubsub.removeEventListener("message");
     };
   }, [node, registerMessage]);
+
+  const updateSubscribers = useCallback(
+    (currentTopic: string): void => {
+      const services = node.services;
+      const pubSubService = services.pubsub;
+      const subscribers = pubSubService.getSubscribers(currentTopic);
+      const subscribersList = subscribers.map((peerId) => {
+        return {
+          peerAddr: peerId.toString(),
+        };
+      });
+      setSubscribersToCurrentTopic(subscribersList);
+    },
+    [node.services],
+  );
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!currentTopic) setSubscribersToCurrentTopic([]);
+      else updateSubscribers(currentTopic);
+    }, 1000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [node, updateSubscribers, currentTopic]);
 
   function subscribeToTopic(topic: string) {
     const trimmedTopic = topic.trim();
@@ -102,31 +127,6 @@ export default function PubSub({ node }: PubSubProps) {
     console.log(`Sent message to ${currentTopic}`);
     registerMessage(currentTopic, message, "me");
   }
-
-  const updateSubscribers = useCallback(
-    (currentTopic: string): void => {
-      const services = node.services;
-      const pubSubService = services.pubsub;
-      const subscribers = pubSubService.getSubscribers(currentTopic);
-      const subscribersList = subscribers.map((peerId) => {
-        return {
-          peerAddr: peerId.toString(),
-        };
-      });
-      setSubscribersToCurrentTopic(subscribersList);
-    },
-    [node.services],
-  );
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (!currentTopic) setSubscribersToCurrentTopic([]);
-      else updateSubscribers(currentTopic);
-    }, 1000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [node, updateSubscribers, currentTopic]);
 
   return (
     <section className="gap-4">

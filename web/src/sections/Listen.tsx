@@ -1,13 +1,15 @@
 import { gossipsub } from "@chainsafe/libp2p-gossipsub";
 import { noise } from "@chainsafe/libp2p-noise";
 import { yamux } from "@chainsafe/libp2p-yamux";
+import { bootstrap } from "@libp2p/bootstrap";
 import { circuitRelayTransport } from "@libp2p/circuit-relay-v2";
 import { dcutr } from "@libp2p/dcutr";
 import { identify } from "@libp2p/identify";
+import { kadDHT, removePublicAddressesMapper } from "@libp2p/kad-dht";
 import { webRTC } from "@libp2p/webrtc";
 import { webSockets } from "@libp2p/websockets";
 import * as filters from "@libp2p/websockets/filters";
-import { Multiaddr } from "@multiformats/multiaddr";
+import { multiaddr, Multiaddr } from "@multiformats/multiaddr";
 import { createLibp2p } from "libp2p";
 import { useState } from "react";
 import Form from "../components/Form";
@@ -36,10 +38,6 @@ async function initNode(
     streamMuxers: [yamux()],
     connectionGater: {
       denyDialMultiaddr: () => {
-        // by default we refuse to dial local addresses from browsers since they
-        // are usually sent by remote peers broadcasting undialable multiaddrs and
-        // cause errors to appear in the console but in this example we are
-        // explicitly connecting to a local node so allow all addresses
         return false;
       },
     },
@@ -47,12 +45,29 @@ async function initNode(
       identify: identify(),
       pubsub: gossipsub(),
       dcutr: dcutr(),
+      kadDHT: kadDHT({
+        protocol: "/ipfs/kad/1.0.0",
+        peerInfoMapper: removePublicAddressesMapper,
+        clientMode: false,
+      }),
     },
+    peerDiscovery: [
+      bootstrap({
+        list: [import.meta.env["VITE_RELAY_ADDRESS"] as string],
+      }),
+    ],
   });
 
   node.addEventListener("self:peer:update", () => {
     const multiaddrs = node.getMultiaddrs();
     setListeningAddresses(multiaddrs);
+  });
+
+  const bootstrapMultiaddress = multiaddr(
+    import.meta.env["VITE_RELAY_ADDRESS"] as string,
+  );
+  node.dial(bootstrapMultiaddress).catch((error: unknown) => {
+    console.error(error);
   });
 
   return node;

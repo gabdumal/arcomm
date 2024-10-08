@@ -175,7 +175,7 @@ export default function Table<T>({ columns, data }: TableProps<T>) {
           </div>
         </div>
       </div>
-      <div>
+      <div className="text-center sm:text-end">
         Showing {getRowModel().rows.length.toLocaleString()} of&nbsp;
         {getRowCount().toLocaleString()} Rows
       </div>
