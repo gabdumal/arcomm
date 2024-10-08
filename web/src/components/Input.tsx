@@ -14,18 +14,22 @@ interface TextInputProps {
   defaultValue?: string;
 }
 
+interface FileInputProps {
+  type: "file";
+  accept: string;
+}
+
 export type InputProps = {
   inputId: string;
   name: string;
   disabled?: boolean;
   hidden?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-} & (NumberInputProps | TextInputProps);
+} & (NumberInputProps | TextInputProps | FileInputProps);
 
 export default function Input({
   inputId,
   name,
-  defaultValue,
   onChange,
   type,
   disabled,
@@ -36,7 +40,6 @@ export default function Input({
     <input
       id={inputId}
       name={name}
-      defaultValue={defaultValue}
       type={type}
       onChange={onChange}
       disabled={disabled}

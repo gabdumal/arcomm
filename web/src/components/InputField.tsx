@@ -10,11 +10,10 @@ export default function InputField({
   inputId,
   name,
   label,
-  placeholder,
   description,
-  defaultValue,
   disabled,
   hidden,
+  ...props
 }: InputFieldProps) {
   return (
     <div className="gap-1">
@@ -30,13 +29,11 @@ export default function InputField({
         </div>
       )}
       <Input
-        type="text"
         inputId={inputId}
         name={name}
-        placeholder={placeholder}
         disabled={disabled}
         hidden={hidden}
-        defaultValue={typeof defaultValue === "string" ? defaultValue : ""}
+        {...props}
       />
     </div>
   );

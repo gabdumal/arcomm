@@ -1,9 +1,9 @@
-import type { Message as Libp2pMessage } from "@libp2p/interface";
 import { useCallback, useEffect, useState } from "react";
 import { fromString } from "uint8arrays";
 import Form from "../components/Form";
 import Select from "../components/Select";
 import Table from "../components/Table";
+import { addListener } from "../functions/pubSub";
 import { Libp2pNode } from "../types";
 
 interface Message {
@@ -14,23 +14,6 @@ interface Message {
 interface Topic {
   name: string;
   messages: Message[];
-}
-
-function addListener(
-  node: Libp2pNode,
-  registerMessage: (topic: string, message: string, from: string) => void,
-) {
-  node.services.pubsub.addEventListener(
-    "message",
-    (event: CustomEvent<Libp2pMessage>) => {
-      console.log("Received a message!", event);
-      const detail = event.detail;
-      const topic = detail.topic;
-      const message = new TextDecoder().decode(detail.data);
-      const from = "from" in detail ? detail.from.toString() : "unknown";
-      registerMessage(topic, message, from);
-    },
-  );
 }
 
 interface PubSubProps {

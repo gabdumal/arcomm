@@ -43,7 +43,7 @@ export default function Connect({ node }: ConnectProps) {
     console.log(`Dialing ${multiaddr.toString()}`);
   }
 
-  function action(formData: FormData) {
+  function connectAction(formData: FormData) {
     const multiaddrAsString = formData.get("multiaddr") as string;
     const addr = multiaddrAsString ? multiaddr(multiaddrAsString.trim()) : null;
     if (addr === null) return;
@@ -68,7 +68,7 @@ export default function Connect({ node }: ConnectProps) {
           },
         ]}
         submitText="Connect"
-        action={action}
+        action={connectAction}
       />
       <div>
         <h3>Connected</h3>
