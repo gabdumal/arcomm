@@ -1,5 +1,4 @@
 import { multiaddr } from "@multiformats/multiaddr";
-import { useCallback, useEffect } from "react";
 import Form from "../components/Form";
 import { Libp2pNode } from "../types";
 
@@ -10,15 +9,6 @@ interface ShareFileProps {
 }
 
 export default function ShareFile({ node }: ShareFileProps) {
-  const subscribeToFileSharing = useCallback(() => {
-    console.log("Subscribing to file sharing topic");
-    node.services.pubsub.subscribe(FILE_SHARING_TOPIC);
-  }, [node.services.pubsub]);
-
-  useEffect(() => {
-    subscribeToFileSharing();
-  }, [subscribeToFileSharing]);
-
   function shareFile(file: File) {
     console.log("Sharing file", file.name);
     const reader = new FileReader();
@@ -28,6 +18,7 @@ export default function ShareFile({ node }: ShareFileProps) {
       const fileContent = new Uint8Array(reader.result);
       const chunkSize = 1024; // Define the size of each chunk
       const totalChunks = Math.ceil(fileContent.length / chunkSize);
+      console.log(fileContent);
 
       for (let i = 0; i < totalChunks; i++) {
         const chunk = fileContent.slice(i * chunkSize, (i + 1) * chunkSize);

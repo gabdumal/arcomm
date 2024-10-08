@@ -6,19 +6,42 @@ interface FileChunk {
   fileName: string;
   chunkIndex: number;
   totalChunks: number;
-  chunkData: Uint8Array[];
+  chunkData: number[];
 }
 
 interface File {
   fileName: string;
   totalChunks: number;
   receivedChunks: number;
-  chunks: Uint8Array[][];
+  chunks: number[][]; // Array of chunks
+}
+
+export function addListener(
+  node: Libp2pNode,
+  registerMessage: (topic: string, message: string, from: string) => void,
+) {
+  node.services.pubsub.addEventListener(
+    "message",
+    (event: CustomEvent<Message>) => {
+      const detail = event.detail;
+      const topic = detail.topic;
+
+      if (topic === FILE_SHARING_TOPIC) receiveFileChunk(node, detail.data);
+      else {
+        const message = new TextDecoder().decode(detail.data);
+        const from = "from" in detail ? detail.from.toString() : "unknown";
+        registerMessage(topic, message, from);
+      }
+    },
+  );
+
+  console.log("Subscribing to file sharing topic");
+  node.services.pubsub.subscribe(FILE_SHARING_TOPIC);
 }
 
 const receivedFiles = new Map<string, File>();
 
-function receiveFile(node: Libp2pNode, data: Uint8Array) {
+function receiveFileChunk(node: Libp2pNode, data: Uint8Array) {
   const decoder = new TextDecoder();
   const message = decoder.decode(data);
   console.log("Received file message", message);
@@ -42,25 +65,22 @@ function receiveFile(node: Libp2pNode, data: Uint8Array) {
   if (isRepeatedChunk) return;
   file.chunks[chunkIndex] = chunkData;
   file.receivedChunks++;
-  console.log(file);
+
+  if (file.receivedChunks === totalChunks) {
+    console.log("Received all chunks for", fileName);
+    downloadFile(file);
+  }
 }
 
-export function addListener(
-  node: Libp2pNode,
-  registerMessage: (topic: string, message: string, from: string) => void,
-) {
-  node.services.pubsub.addEventListener(
-    "message",
-    (event: CustomEvent<Message>) => {
-      const detail = event.detail;
-      const topic = detail.topic;
-
-      if (topic === FILE_SHARING_TOPIC) receiveFile(node, detail.data);
-      else {
-        const message = new TextDecoder().decode(detail.data);
-        const from = "from" in detail ? detail.from.toString() : "unknown";
-        registerMessage(topic, message, from);
-      }
-    },
-  );
+function downloadFile(file: File) {
+  const concatenatedChunks = file.chunks.flat();
+  const text = new TextDecoder().decode(new Uint8Array(concatenatedChunks));
+  const blob = new Blob([text], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = file.fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+  receivedFiles.delete(file.fileName);
 }
