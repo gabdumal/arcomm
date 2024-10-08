@@ -5,7 +5,6 @@ import { bootstrap } from "@libp2p/bootstrap";
 import { circuitRelayTransport } from "@libp2p/circuit-relay-v2";
 import { dcutr } from "@libp2p/dcutr";
 import { identify } from "@libp2p/identify";
-import { kadDHT, removePublicAddressesMapper } from "@libp2p/kad-dht";
 import { webRTC } from "@libp2p/webrtc";
 import { webSockets } from "@libp2p/websockets";
 import * as filters from "@libp2p/websockets/filters";
@@ -45,11 +44,6 @@ async function initNode(
       identify: identify(),
       pubsub: gossipsub(),
       dcutr: dcutr(),
-      kadDHT: kadDHT({
-        protocol: "/ipfs/kad/1.0.0",
-        peerInfoMapper: removePublicAddressesMapper,
-        clientMode: false,
-      }),
     },
     peerDiscovery: [
       bootstrap({
@@ -61,6 +55,14 @@ async function initNode(
   node.addEventListener("self:peer:update", () => {
     const multiaddrs = node.getMultiaddrs();
     setListeningAddresses(multiaddrs);
+  });
+
+  node.addEventListener("peer:discovery", (event) => {
+    const peerId = event.detail.id;
+    console.log("Discovered a peer:", peerId);
+    node.dial(peerId).catch((err: unknown) => {
+      console.error("Failed to connect to peer:", err);
+    });
   });
 
   const bootstrapMultiaddress = multiaddr(

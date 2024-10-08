@@ -38,9 +38,15 @@ importers:
       '@libp2p/kad-dht':
         specifier: ^14.0.0
         version: 14.0.0
+      '@libp2p/mdns':
+        specifier: ^11.0.7
+        version: 11.0.7
       '@libp2p/peer-collections':
         specifier: ^6.0.7
         version: 6.0.7
+      '@libp2p/peer-id':
+        specifier: ^5.0.4
+        version: 5.0.4
       '@libp2p/pubsub':
         specifier: ^10.0.6
         version: 10.0.6
@@ -1122,6 +1128,9 @@ packages:
   '@libp2p/logger@5.1.0':
     resolution: {integrity: sha512-hmkk1TONYRe+kKs5QTxkayIfj9qicp8hcrJ1Ac9QfTW/jdaUlnqd1uop4QcOD5GV6qNMq+v1qaMFWFYSN9RcPA==}
 
+  '@libp2p/mdns@11.0.7':
+    resolution: {integrity: sha512-CW0MbN2bQvSVsZmYT8Ul5a2TOiwhU3aBKyHyCuf5WA70Nu6Lc72YSc+vRT2EIw5Ihb+dbxC/mXrhY1xKdXaWCg==}
+
   '@libp2p/multistream-select@6.0.5':
     resolution: {integrity: sha512-iOMHcF/NzeShmnRLf9KI39bgfxptklbf6Tv9NvBbICfYO/IJB6KDI6bOif5eXXqUqZjHrQJ3jrRppOEwk2HV4g==}
 
@@ -1439,6 +1448,9 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+
+  '@types/multicast-dns@7.2.4':
+    resolution: {integrity: sha512-ib5K4cIDR4Ro5SR3Sx/LROkMDa0BHz0OPaCBL/OSPDsAXEGZ3/KQeS6poBKYVN7BfjXDL9lWNwzyHVgt/wkyCw==}
 
   '@types/murmurhash3js-revisited@3.0.3':
     resolution: {integrity: sha512-QvlqvYtGBYIDeO8dFdY4djkRubcrc+yTJtBc7n8VZPlJDUS/00A+PssbvERM8f9bYRmcaSEHPZgZojeQj7kzAA==}
@@ -3072,6 +3084,10 @@ packages:
     resolution: {integrity: sha512-kh8ARjh8rMN7Du2igDRO9QJnqCb2xYTJxyQYK7vJJS4TvLLmsbyhiKpSW+t+y26gyOyMd0riphX0GeWKU3ky5g==}
     engines: {node: '>=12.13'}
 
+  multicast-dns@7.2.5:
+    resolution: {integrity: sha512-2eznPJP8z2BFLX50tf0LuODrpINqP1RVIm/CObbTcBRITQgmC/TjcREF1NeTBzIcR5XO/ukWo+YHOjBbFwIupg==}
+    hasBin: true
+
   multiformats@13.3.0:
     resolution: {integrity: sha512-CBiqvsufgmpo01VT5ze94O+uc+Pbf6f/sThlvWss0sBZmAOu6GQn5usrYV2sf2mr17FWYc0rO8c/CNe2T90QAA==}
 
@@ -3950,6 +3966,9 @@ packages:
 
   through2@2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
+
+  thunky@1.1.0:
+    resolution: {integrity: sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==}
 
   tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
@@ -5553,6 +5572,17 @@ snapshots:
       multiformats: 13.3.0
       weald: 1.0.3
 
+  '@libp2p/mdns@11.0.7':
+    dependencies:
+      '@libp2p/interface': 2.1.2
+      '@libp2p/interface-internal': 2.0.7
+      '@libp2p/peer-id': 5.0.4
+      '@libp2p/utils': 6.1.0
+      '@multiformats/multiaddr': 12.3.1
+      '@types/multicast-dns': 7.2.4
+      dns-packet: 5.6.1
+      multicast-dns: 7.2.5
+
   '@libp2p/multistream-select@6.0.5':
     dependencies:
       '@libp2p/interface': 2.1.2
@@ -6170,6 +6200,11 @@ snapshots:
       '@types/istanbul-lib-report': 3.0.3
 
   '@types/json-schema@7.0.15': {}
+
+  '@types/multicast-dns@7.2.4':
+    dependencies:
+      '@types/dns-packet': 5.6.5
+      '@types/node': 22.7.4
 
   '@types/murmurhash3js-revisited@3.0.3': {}
 
@@ -8129,6 +8164,11 @@ snapshots:
 
   ms@3.0.0-canary.1: {}
 
+  multicast-dns@7.2.5:
+    dependencies:
+      dns-packet: 5.6.1
+      thunky: 1.1.0
+
   multiformats@13.3.0: {}
 
   murmurhash3js-revisited@3.0.0: {}
@@ -9068,6 +9108,8 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
       xtend: 4.0.2
+
+  thunky@1.1.0: {}
 
   tmpl@1.0.5: {}
 
