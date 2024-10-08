@@ -12,6 +12,7 @@ export default function InputField({
   label,
   placeholder,
   description,
+  defaultValue,
   disabled,
   hidden,
 }: InputFieldProps) {
@@ -29,12 +30,13 @@ export default function InputField({
         </div>
       )}
       <Input
+        type="text"
         inputId={inputId}
         name={name}
-        type="text"
         placeholder={placeholder}
         disabled={disabled}
         hidden={hidden}
+        defaultValue={typeof defaultValue === "string" ? defaultValue : ""}
       />
     </div>
   );

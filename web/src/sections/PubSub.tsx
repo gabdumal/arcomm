@@ -1,3 +1,4 @@
+import type { Message as Libp2pMessage } from "@libp2p/interface";
 import { useCallback, useEffect, useState } from "react";
 import { fromString } from "uint8arrays/from-string";
 import Form from "../components/Form";
@@ -19,6 +20,23 @@ interface PubSubProps {
   node: Libp2pNode;
 }
 
+function addListener(
+  node: Libp2pNode,
+  registerMessage: (topic: string, message: string, from: string) => void,
+) {
+  node.services.pubsub.addEventListener(
+    "message",
+    (event: CustomEvent<Libp2pMessage>) => {
+      console.log("Received a message!", event);
+      const detail = event.detail;
+      const topic = detail.topic;
+      const message = new TextDecoder().decode(detail.data);
+      const from = "from" in detail ? detail.from.toString() : "unknown";
+      registerMessage(topic, message, from);
+    },
+  );
+}
+
 export default function PubSub({ node }: PubSubProps) {
   const [subscribedTopics, setSubscribedTopics] = useState<Map<string, Topic>>(
     new Map(),
@@ -28,30 +46,26 @@ export default function PubSub({ node }: PubSubProps) {
     { peerAddr: string }[]
   >([]);
 
-  useEffect(() => {
-    const addListener = (
-      node: Libp2pNode,
-      setSubscribedTopics: React.Dispatch<
-        React.SetStateAction<Map<string, Topic>>
-      >,
-    ) => {
-      node.services.pubsub.addEventListener("message", (event) => {
-        console.log("message event", event);
-        const topic = event.detail.topic;
-        const message = new TextDecoder().decode(event.detail.data);
-
-        setSubscribedTopics((prev) => {
-          const updatedTopics = new Map(prev);
-          const topicObj = updatedTopics.get(topic);
-          if (topicObj) {
-            topicObj.messages.push({ from: "?", data: message });
-          }
-          return updatedTopics;
-        });
+  const registerMessage = useCallback(
+    (topic: string, message: string, from: string) => {
+      setSubscribedTopics((prev) => {
+        const updatedTopics = new Map(prev);
+        const topicObj = updatedTopics.get(topic);
+        if (topicObj) {
+          topicObj.messages.push({ from, data: message });
+        }
+        return updatedTopics;
       });
+    },
+    [],
+  );
+
+  useEffect(() => {
+    addListener(node, registerMessage);
+    return () => {
+      node.services.pubsub.removeEventListener("message");
     };
-    addListener(node, setSubscribedTopics);
-  }, [node, setSubscribedTopics]);
+  }, [node, registerMessage]);
 
   function subscribeToTopic(topic: string) {
     const trimmedTopic = topic.trim();
@@ -86,6 +100,7 @@ export default function PubSub({ node }: PubSubProps) {
     const pubSubService = services.pubsub;
     await pubSubService.publish(currentTopic, fromString(message));
     console.log(`Sent message to ${currentTopic}`);
+    registerMessage(currentTopic, message, "me");
   }
 
   const updateSubscribers = useCallback(
